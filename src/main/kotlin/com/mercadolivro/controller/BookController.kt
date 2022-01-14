@@ -5,6 +5,7 @@ import com.mercadolivro.controller.request.PutBookRequest
 import com.mercadolivro.controller.response.BookResponse
 import com.mercadolivro.extension.toBookModel
 import com.mercadolivro.extension.toResponse
+import com.mercadolivro.model.BookModel
 import com.mercadolivro.service.BookService
 import com.mercadolivro.service.CustomerService
 import org.springframework.data.domain.Page
@@ -55,6 +56,11 @@ class BookController (
     fun updateBook(@PathVariable id: Int, @RequestBody book: PutBookRequest) {
         val bookSaved = bookService.findBooksById(id)
         bookService.updateBook(book.toBookModel(bookSaved))
+    }
+
+    @GetMapping("/all-sold-books")
+    fun findSoldBooks(@PageableDefault(page = 0, size = 10) pageable: Pageable): Page<BookResponse> {
+        return bookService.findSoldBooks(pageable).map { it.toResponse() }
     }
 
 }

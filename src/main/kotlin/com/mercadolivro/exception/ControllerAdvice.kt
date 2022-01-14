@@ -5,6 +5,7 @@ import com.mercadolivro.controller.response.FieldErrorResponse
 import com.mercadolivro.enums.Errors
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -65,5 +66,34 @@ class ControllerAdvice {
 
         return ResponseEntity(erro, HttpStatus.UNPROCESSABLE_ENTITY)
     }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handleAuthenticationException(ex: AuthenticationException, request: WebRequest): ResponseEntity<ErrorResponse> {
+        val erro = ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.message,
+                ex.errorCode,
+                null
+
+        )
+
+        return ResponseEntity(erro, HttpStatus.UNAUTHORIZED)
+    }
+
+
+    @ExceptionHandler(AccessDeniedException::class)
+    fun handleAccessDeniedException(ex: AccessDeniedException, request: WebRequest): ResponseEntity<ErrorResponse> {
+        val erro = ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                Errors.ML301.message,
+                Errors.ML301.code,
+                null
+
+        )
+
+        return ResponseEntity(erro, HttpStatus.NOT_FOUND)
+    }
+
+
 }
 

@@ -12,3 +12,7 @@ spring:
     hibernate.ddl-auto: update
     hibernate:
       jdbc: time_zone = TimeZone
+
+jwt:
+  secret: ceae87e0-d16b-4a32-ae69-008b4b8a0629
+  expiration: 999999

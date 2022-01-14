@@ -1,8 +1,10 @@
 package com.mercadolivro.service
 
+import com.mercadolivro.controller.response.BookResponse
 import com.mercadolivro.enums.BookStatus
 import com.mercadolivro.enums.Errors
 import com.mercadolivro.exception.NotFoundException
+import com.mercadolivro.extension.toResponse
 import com.mercadolivro.model.BookModel
 import com.mercadolivro.model.CustomerModel
 import com.mercadolivro.repository.BookRepository
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class BookService(
-        val bookRepository: BookRepository
+        val bookRepository: BookRepository,
+
 ) {
 
     fun createBook(book: BookModel) {
@@ -69,8 +72,11 @@ class BookService(
         }
 
         bookRepository.saveAll(books)
-
     }
 
+    fun findSoldBooks(pageable: Pageable): Page<BookModel> {
+        return bookRepository.findByStatus(BookStatus.VENDIDO, pageable)
+
+    }
 
 }
